@@ -1,0 +1,25 @@
+{
+  "name": "gym-buddy-backend",
+  "version": "0.0.0",
+  "description": "GymBuddy_backend - API for the gym",
+  "homepage": "https://github.com/filil2003/gym-buddy-backend",
+  "bugs": "https://github.com/filil2003/gym-buddy-backend/issues",
+  "license": "UNLICENSED",
+  "author": "Ilya Filatov <filil2003@yandex.ru>",
+  "repository": "github:filil2003/gym-buddy-backend",
+  "scripts": {
+    "start": "echo \"Error: no start specified\" && exit 1",
+    "build": "echo \"Error: no build specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": "^20.17.0",
+    "yarn": "^1.22.22"
+  },
+  "packageManager": "yarn@1.22.22",
+  "private": true
+}
