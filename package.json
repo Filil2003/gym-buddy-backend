@@ -11,10 +11,15 @@
     "start": "node --watch --import=tsx ./src/server.ts",
     "build": "tsc && tsc-alias",
     "preview": "node ./build/server.js",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "format": "biome format",
+    "format:fix": "biome format --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {},
   "devDependencies": {
+    "@biomejs/biome": "1.9.3",
     "@types/node": "^22.7.5",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.19.1",
