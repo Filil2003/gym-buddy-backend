@@ -1,24 +1,12 @@
-import {
-  type IncomingMessage,
-  type RequestListener,
-  type Server,
-  type ServerResponse,
-  createServer
-} from 'node:http';
+import express, { type Express, type Request, type Response } from 'express';
 
+const app: Express = express();
 const PORT = 3000;
 
-const requestHandler: RequestListener = (
-  _req: IncomingMessage,
-  res: ServerResponse
-) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello, World!');
-};
+app.get('/', (_req: Request, res: Response): void => {
+  res.send('Hello World!');
+});
 
-const server: Server = createServer(requestHandler);
-
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
