@@ -1,8 +1,17 @@
-import { createServer, IncomingMessage, RequestListener, Server, ServerResponse } from 'node:http';
+import {
+  type IncomingMessage,
+  type RequestListener,
+  type Server,
+  type ServerResponse,
+  createServer
+} from 'node:http';
 
 const PORT = 3000;
 
-const requestHandler: RequestListener = (_req: IncomingMessage, res: ServerResponse) => {
+const requestHandler: RequestListener = (
+  _req: IncomingMessage,
+  res: ServerResponse
+) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   res.end('Hello, World!');
