@@ -8,9 +8,9 @@
   "author": "Ilya Filatov <filil2003@yandex.ru>",
   "repository": "github:filil2003/gym-buddy-backend",
   "scripts": {
-    "start": "node --watch --import=tsx ./src/server.ts",
+    "start": "node --watch --env-file .env.local --import=tsx ./src/server.ts",
     "build": "tsc && tsc-alias",
-    "preview": "node ./build/server.js",
+    "preview": "node --env-file .env.local ./build/server.js",
     "lint": "biome lint",
     "lint:fix": "biome lint --write",
     "format": "biome format",
