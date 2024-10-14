@@ -10,6 +10,15 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noUncheckedSideEffectImports": true,
+    "paths": {
+      "@config/*": ["config/*"],
+      "@controllers/*": ["controllers/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@models/*": ["models/*"],
+      "@routes/*": ["routes/*"],
+      "@services/*": ["services/*"],
+      "@shared/*": ["services/*"]
+    },
     "rootDir": "./src",
 
     /* Emit */
