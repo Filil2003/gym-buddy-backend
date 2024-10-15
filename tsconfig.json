@@ -17,7 +17,7 @@
       "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
       "@services/*": ["services/*"],
-      "@shared/*": ["services/*"]
+      "@shared/*": ["shared/*"]
     },
     "rootDir": "./src",
 
