@@ -5,6 +5,8 @@ import {
 } from '@middlewares/index.js';
 import { cliLoggerService } from '@services/logger/index.js';
 import express, { type Express, type Request, type Response } from 'express';
+import { mongooseConnect } from './database/mongoose-connect.js';
+await mongooseConnect();
 
 const app: Express = express();
 const BASE_URL = config.server.baseUrl;

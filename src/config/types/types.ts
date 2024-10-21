@@ -1,5 +1,14 @@
 import type { LogLevelEnum } from '../enums/log-level.enum.js';
 
+export interface MongoConfig {
+  host: string;
+  port: number;
+  database: string;
+  username?: string;
+  password?: string;
+  options?: string;
+}
+
 export interface EnvironmentConfig {
   server: {
     baseUrl: string;
@@ -8,5 +17,14 @@ export interface EnvironmentConfig {
   logger: {
     level: LogLevelEnum;
     timestampFormat: string;
+  };
+  mongo: {
+    host: string;
+    port: number;
+    database: string;
+    username?: string;
+    password?: string;
+    options?: string;
+    uri: string;
   };
 }
