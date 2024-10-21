@@ -19,6 +19,8 @@ app.get('/', (_req: Request, res: Response): void => {
   res.send('Hello World!');
 });
 
+app.use(errorHandlerMiddleware);
+
 app.listen(PORT, () => {
   cliLoggerService.info(`Server started on ${BASE_URL}:${PORT}`);
 });
