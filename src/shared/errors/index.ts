@@ -9,3 +9,9 @@ export class InternalServerError extends HttpError {
     super(message, HttpStatusCode.InternalServerError, cause);
   }
 }
+
+export class NotFoundError extends HttpError {
+  constructor(message: string = HttpStatusMessage.NotFound, cause?: Error) {
+    super(message, HttpStatusCode.NotFound, cause);
+  }
+}
