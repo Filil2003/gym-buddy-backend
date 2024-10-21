@@ -22,7 +22,6 @@ export const httpLogger = createLogger({
         },
         level: level.toUpperCase(),
         logId: generateLogId(),
-        message,
         metadata,
         timestamp
       };

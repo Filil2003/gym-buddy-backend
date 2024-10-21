@@ -5,16 +5,16 @@ import {
 } from './utils/format-http-logger-metadata.js';
 
 export const httpLoggerService = {
-  info: (context: Context, message = '') => {
-    httpLogger.info(message, formatHttpLoggerMetadata(context));
+  info: (context: Context) => {
+    httpLogger.info('Not used', formatHttpLoggerMetadata(context));
   },
-  warn: (context: Context, message = '') => {
-    httpLogger.warn(message, formatHttpLoggerMetadata(context));
+  warn: (context: Context) => {
+    httpLogger.warn('Not used', formatHttpLoggerMetadata(context));
   },
-  error: (context: Context, message = '') => {
-    httpLogger.error(message, formatHttpLoggerMetadata(context));
+  error: (context: Context) => {
+    httpLogger.error('Not used', formatHttpLoggerMetadata(context));
   },
-  http: (context: Context, message = '') => {
-    httpLogger.http(message, formatHttpLoggerMetadata(context));
+  http: (context: Context) => {
+    httpLogger.http('Not used', formatHttpLoggerMetadata(context));
   }
 };

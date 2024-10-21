@@ -18,10 +18,7 @@ export const httpResponseLoggerMiddleware = (
       `${method} '${originalUrl}' ${statusCode} ${statusMessage} ${durationInMs.toFixed(3)} ms`
     );
 
-    httpLoggerService.http(
-      { req, res },
-      `${method} ${originalUrl} ${statusCode}`
-    );
+    httpLoggerService.http({ req, res });
   });
 
   next();
