@@ -5,7 +5,7 @@ export const httpResponseLoggerMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   const start: [number, number] = process.hrtime();
 
   res.on('finish', (): void => {
