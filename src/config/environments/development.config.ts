@@ -9,9 +9,10 @@ const mongoConfig = {
 };
 
 export const developmentConfig: EnvironmentConfig = {
+  isDebug: true,
   server: {
     baseUrl: 'http://dev.localhost',
-    port: 3000
+    port: 8080
   },
   logger: {
     level: LogLevelEnum.HTTP,

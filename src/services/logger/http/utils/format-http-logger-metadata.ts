@@ -1,34 +1,33 @@
 import type { Request, Response } from 'express';
 
-export interface IContext {
+export interface Context {
   req: Request;
   res: Response;
-  error?: Error;
 }
 
-export const formatHttpLoggerMetadata = (context: IContext) => {
+export const formatHttpLoggerMetadata = ({ req, res }: Context) => {
   return {
     request: {
-      headers: context.req.headers,
-      host: context.req.headers.host,
-      protocol: context.req.protocol,
-      baseUrl: context.req.baseUrl,
-      url: context.req.url,
-      method: context.req.method,
-      body: context.req.body,
-      params: context.req.params,
-      query: context.req.query,
-      sourceIp: context.req.socket.remoteAddress
+      id: res.locals['responseBody'].requestId,
+      headers: req.headers,
+      host: req.headers.host,
+      protocol: req.protocol,
+      baseUrl: req.baseUrl,
+      url: req.url,
+      method: req.method,
+      body: req.body,
+      params: req.params,
+      query: req.query,
+      sourceIp: req.socket.remoteAddress
     },
     response: {
-      headers: context.res.getHeaders(),
-      statusCode: context.res.statusCode,
-      body: context.res.locals['responseBody']
+      headers: res.getHeaders(),
+      statusCode: res.statusCode,
+      statusMessage: res.statusMessage,
+      body: res.locals['responseBody']
     },
-    error: {
-      name: context?.error?.name,
-      message: context?.error?.message,
-      stackTrace: context?.error?.stack
-    }
+    ...(res.locals['debugInfo'] && {
+      debugInfo: res.locals['debugInfo']
+    })
   };
 };

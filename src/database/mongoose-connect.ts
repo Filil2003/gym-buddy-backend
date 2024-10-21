@@ -4,6 +4,10 @@ import { to } from '@shared/utils/to.js';
 import mongoose from 'mongoose';
 import { MongoDbError } from './errors.js';
 
+if (config.isDebug) {
+  mongoose.set('debug', true);
+}
+
 export async function mongooseConnect(): Promise<void> {
   cliLoggerService.info('Connecting to MongoDB...');
 

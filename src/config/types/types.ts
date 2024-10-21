@@ -10,6 +10,7 @@ export interface MongoConfig {
 }
 
 export interface EnvironmentConfig {
+  isDebug: boolean;
   server: {
     baseUrl: string;
     port: number;

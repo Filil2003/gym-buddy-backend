@@ -1,12 +1,9 @@
-import { config } from '@config/index.js';
-import { randomBytes } from 'node:crypto';
 import { env, pid } from 'node:process';
+import { config } from '@config/index.js';
 import { createLogger, format, transports } from 'winston';
 import 'winston-daily-rotate-file';
 
 const { combine, timestamp, json, printf } = format;
-
-const generateLogId = (): string => randomBytes(16).toString('hex');
 
 export const httpLogger = createLogger({
   level: config.logger.level,
@@ -21,8 +18,7 @@ export const httpLogger = createLogger({
           processId: pid
         },
         level: level.toUpperCase(),
-        logId: generateLogId(),
-        metadata,
+        context: metadata,
         timestamp
       };
       return JSON.stringify(response, null, 2);
