@@ -8,7 +8,7 @@ export interface Context {
 export const formatHttpLoggerMetadata = ({ req, res }: Context) => {
   return {
     request: {
-      id: res.locals['responseBody'].requestId,
+      id: res.getHeader('X-Request-Id'),
       headers: req.headers,
       host: req.headers.host,
       protocol: req.protocol,
@@ -24,7 +24,7 @@ export const formatHttpLoggerMetadata = ({ req, res }: Context) => {
       headers: res.getHeaders(),
       statusCode: res.statusCode,
       statusMessage: res.statusMessage,
-      body: res.locals['responseBody']
+      body: res.locals['responseBody'] ?? {}
     },
     ...(res.locals['debugInfo'] && {
       debugInfo: res.locals['debugInfo']

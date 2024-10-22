@@ -1,4 +1,3 @@
-import { randomBytes } from 'node:crypto';
 import { config } from '@config/index.js';
 import { isHttpError } from '@shared/errors/type-guards.js';
 import type { DebugInfo, HttpResponseBody } from '@shared/http/types/index.js';
@@ -18,9 +17,6 @@ export const responseModifierMiddleware = (
   res: Response,
   next: NextFunction
 ): void => {
-  // Generate a unique request ID for tracking it in logs file
-  const requestId: string = randomBytes(16).toString('hex');
-
   const originalSendJson = res.json.bind(res);
 
   res.json = (body: unknown): Response => {
@@ -30,7 +26,6 @@ export const responseModifierMiddleware = (
 
     // Construct the final response body to be sent to the client
     const responseBody: HttpResponseBody = {
-      requestId,
       ...(isHttpError(body) ? { error: body } : { data: body }),
       ...(debugInfo && { debugInfo: debugInfo })
     };
