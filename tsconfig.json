@@ -15,7 +15,7 @@
       "@controllers/*": ["controllers/*"],
       "@middlewares/*": ["middlewares/*"],
       "@models/*": ["models/*"],
-      "@routes/*": ["routes/*"],
+      "@routers/*": ["routers/*"],
       "@services/*": ["services/*"],
       "@shared/*": ["shared/*"]
     },

@@ -15,3 +15,9 @@ export class NotFoundError extends HttpError {
     super(message, HttpStatusCode.NotFound, cause);
   }
 }
+
+export class ConflictError extends HttpError {
+  constructor(message: string = HttpStatusMessage.Conflict, cause?: Error) {
+    super(message, HttpStatusCode.Conflict, cause);
+  }
+}

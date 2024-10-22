@@ -5,6 +5,7 @@ import {
   pageNotFoundMiddleware, requestIdMiddleware,
   responseModifierMiddleware
 } from '@middlewares/index.js';
+import { userRouter } from '@routers/user.router.js';
 import { cliLoggerService } from '@services/logger/index.js';
 import express, { type Express, type Request, type Response } from 'express';
 import { mongooseConnect } from './database/mongoose-connect.js';
@@ -15,9 +16,8 @@ const BASE_URL = config.server.baseUrl;
 await mongooseConnect();
 
 const app: Express = express();
-const BASE_URL = config.server.baseUrl;
-const PORT = config.server.port;
 
+app.disable('x-powered-by');
 app.use(express.json());
 app.use(requestIdMiddleware);
 app.use(responseModifierMiddleware);
@@ -26,6 +26,8 @@ app.use(httpResponseLoggerMiddleware);
 app.get('/', (_req: Request, res: Response): void => {
   res.send('Hello World!');
 });
+
+app.use('/api', userRouter);
 
 app.all('*', pageNotFoundMiddleware);
 
