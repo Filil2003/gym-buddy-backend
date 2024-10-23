@@ -5,7 +5,11 @@ import mongoose from 'mongoose';
 import { MongoDbError } from './errors.js';
 
 if (config.isDebug) {
-  mongoose.set('debug', true);
+  mongoose.set('debug', (collectionName, method, query, doc) => {
+    cliLoggerService.info(
+      `Mongoose: ${collectionName}.${method}(${JSON.stringify(query)}), ${JSON.stringify(doc)}`
+    );
+  });
 }
 
 export async function mongooseConnect(): Promise<void> {
