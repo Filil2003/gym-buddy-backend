@@ -5,6 +5,7 @@ import {
   pageNotFoundMiddleware, requestIdMiddleware,
   responseModifierMiddleware
 } from '@middlewares/index.js';
+import { exerciseRouter } from '@routers/exercise.router.js';
 import { userRouter } from '@routers/user.router.js';
 import { cliLoggerService } from '@services/logger/index.js';
 import express, { type Express, type Request, type Response } from 'express';
@@ -28,6 +29,7 @@ app.get('/', (_req: Request, res: Response): void => {
 });
 
 app.use('/api', userRouter);
+app.use('/api', exerciseRouter);
 
 app.all('*', pageNotFoundMiddleware);
 

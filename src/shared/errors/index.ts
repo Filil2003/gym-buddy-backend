@@ -21,3 +21,9 @@ export class ConflictError extends HttpError {
     super(message, HttpStatusCode.Conflict, cause);
   }
 }
+
+export class BadRequestError extends HttpError {
+  constructor(message: string = HttpStatusMessage.BadRequest, cause?: Error) {
+    super(message, HttpStatusCode.BadRequest, cause);
+  }
+}
