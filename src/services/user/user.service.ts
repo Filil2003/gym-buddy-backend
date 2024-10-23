@@ -1,11 +1,11 @@
+import type { MongoError } from 'mongodb';
 import {
   type User,
   type UserDocument,
   UserDto,
   UserModel
-} from '@models/user/index.js';
-import { to } from '@shared/utils/to.js';
-import type { MongoError } from 'mongodb';
+} from '#models/user/index.js';
+import { to } from '#shared/utils/to.js';
 import { UserAlreadyExistsError, UserNotFoundError } from './errors.js';
 
 export const userService = {

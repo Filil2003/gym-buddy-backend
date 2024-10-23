@@ -1,9 +1,9 @@
-import type { Exercise } from '@models/exercise/index.js';
-import { exerciseService } from '@services/exercise/exercise.service.js';
-import { BadRequestError } from '@shared/errors/index.js';
-import { HttpStatusCode } from '@shared/http/enums/index.js';
-import { to } from '@shared/utils/to.js';
 import type { NextFunction, Request, Response } from 'express';
+import type { Exercise } from '#models/exercise/index.js';
+import { exerciseService } from '#services/exercise/exercise.service.js';
+import { BadRequestError } from '#shared/errors/index.js';
+import { HttpStatusCode } from '#shared/http/enums/index.js';
+import { to } from '#shared/utils/to.js';
 
 export const exerciseController = {
   getAllExercisesByUser,

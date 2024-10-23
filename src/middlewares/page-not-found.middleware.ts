@@ -1,5 +1,5 @@
-import { NotFoundError } from '@shared/errors/index.js';
 import type { NextFunction, Request, Response } from 'express';
+import { NotFoundError } from '#shared/errors/index.js';
 
 class PageNotFoundError extends NotFoundError {}
 

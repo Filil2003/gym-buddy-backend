@@ -1,6 +1,6 @@
-import { constructMongoUri } from '@config/utils/construct-mongo-uri.js';
 import { LogLevelEnum } from '../enums/log-level.enum.js';
 import type { EnvironmentConfig } from '../types/types.js';
+import { constructMongoUri } from '../utils/construct-mongo-uri.js';
 
 const mongoConfig = {
   host: '127.0.0.1',

@@ -1,7 +1,7 @@
-import { config } from '@config/index.js';
-import { isHttpError } from '@shared/errors/type-guards.js';
-import type { DebugInfo, HttpResponseBody } from '@shared/http/types/index.js';
 import type { NextFunction, Request, Response } from 'express';
+import { config } from '#config/index.js';
+import { isHttpError } from '#shared/errors/type-guards.js';
+import type { DebugInfo, HttpResponseBody } from '#shared/http/types/index.js';
 
 /**
  * Middleware for formatting the response and saving it for subsequent logging.

@@ -1,12 +1,12 @@
+import type { MongoError } from 'mongodb';
 import {
   type Exercise,
   type ExerciseDocument,
   ExerciseDto,
   ExerciseModel
-} from '@models/exercise/index.js';
-import { ExerciseNotFoundError } from '@services/exercise/errors.js';
-import { to } from '@shared/utils/to.js';
-import type { MongoError } from 'mongodb';
+} from '#models/exercise/index.js';
+import { ExerciseNotFoundError } from '#services/exercise/errors.js';
+import { to } from '#shared/utils/to.js';
 
 export const exerciseService = {
   getAllExercisesByUser,

@@ -1,7 +1,7 @@
 import { STATUS_CODES } from 'node:http';
 import { inspect } from 'node:util';
-import type { DebugInfo, HttpStatus } from '@shared/http/types/index.js';
 import type { Response } from 'express';
+import type { DebugInfo, HttpStatus } from '#shared/http/types/index.js';
 
 export class HttpError extends Error {
   public readonly statusCode: HttpStatus['statusCode'];

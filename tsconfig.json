@@ -11,13 +11,13 @@
     "moduleResolution": "NodeNext",
     "noUncheckedSideEffectImports": true,
     "paths": {
-      "@config/*": ["config/*"],
-      "@controllers/*": ["controllers/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@models/*": ["models/*"],
-      "@routers/*": ["routers/*"],
-      "@services/*": ["services/*"],
-      "@shared/*": ["shared/*"]
+      "#config/*": ["config/*"],
+      "#controllers/*": ["controllers/*"],
+      "#middlewares/*": ["middlewares/*"],
+      "#models/*": ["models/*"],
+      "#routers/*": ["routers/*"],
+      "#services/*": ["services/*"],
+      "#shared/*": ["shared/*"]
     },
     "rootDir": "./src",
 

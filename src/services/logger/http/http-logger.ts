@@ -1,6 +1,6 @@
 import { env, pid } from 'node:process';
-import { config } from '@config/index.js';
 import { createLogger, format, transports } from 'winston';
+import { config } from '#config/index.js';
 import 'winston-daily-rotate-file';
 
 const { combine, timestamp, json, printf } = format;

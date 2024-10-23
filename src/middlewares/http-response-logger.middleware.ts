@@ -1,5 +1,5 @@
-import { cliLoggerService, httpLoggerService } from '@services/logger/index.js';
 import type { NextFunction, Request, Response } from 'express';
+import { cliLoggerService, httpLoggerService } from '#services/logger/index.js';
 
 export const httpResponseLoggerMiddleware = (
   req: Request,

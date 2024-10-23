@@ -1,7 +1,7 @@
-import { config } from '@config/index.js';
-import { cliLoggerService } from '@services/logger/index.js';
-import { to } from '@shared/utils/to.js';
 import mongoose from 'mongoose';
+import { config } from '#config/index.js';
+import { cliLoggerService } from '#services/logger/index.js';
+import { to } from '#shared/utils/to.js';
 import { MongoDbError } from './errors.js';
 
 if (config.isDebug) {

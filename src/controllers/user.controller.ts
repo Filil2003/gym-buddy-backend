@@ -1,9 +1,9 @@
-import type { User } from '@models/user/index.js';
-import { userService } from '@services/user/user.service.js';
-import { ConflictError } from '@shared/errors/index.js';
-import { HttpStatusCode } from '@shared/http/enums/index.js';
-import { to } from '@shared/utils/to.js';
 import type { NextFunction, Request, Response } from 'express';
+import type { User } from '#models/user/index.js';
+import { userService } from '#services/user/user.service.js';
+import { ConflictError } from '#shared/errors/index.js';
+import { HttpStatusCode } from '#shared/http/enums/index.js';
+import { to } from '#shared/utils/to.js';
 
 export const userController = {
   getAllUsers,

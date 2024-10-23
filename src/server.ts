@@ -1,14 +1,14 @@
-import { config } from '@config/index.js';
+import express, { type Express, type Request, type Response } from 'express';
+import { config } from '#config/index.js';
 import {
   errorHandlerMiddleware,
   httpResponseLoggerMiddleware,
   pageNotFoundMiddleware, requestIdMiddleware,
   responseModifierMiddleware
-} from '@middlewares/index.js';
-import { exerciseRouter } from '@routers/exercise.router.js';
-import { userRouter } from '@routers/user.router.js';
-import { cliLoggerService } from '@services/logger/index.js';
-import express, { type Express, type Request, type Response } from 'express';
+} from '#middlewares/index.js';
+import { exerciseRouter } from '#routers/exercise.router.js';
+import { userRouter } from '#routers/user.router.js';
+import { cliLoggerService } from '#services/logger/index.js';
 import { mongooseConnect } from './database/mongoose-connect.js';
 
 const PORT = config.server.port;

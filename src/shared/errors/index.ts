@@ -1,4 +1,4 @@
-import { HttpStatusCode, HttpStatusMessage } from '@shared/http/enums/index.js';
+import { HttpStatusCode, HttpStatusMessage } from '#shared/http/enums/index.js';
 import { HttpError } from './http.error.js';
 
 export class InternalServerError extends HttpError {

@@ -1,7 +1,7 @@
-import type { HttpError } from '@shared/errors/http.error.js';
-import { InternalServerError } from '@shared/errors/index.js';
-import { isHttpError } from '@shared/errors/type-guards.js';
 import type { NextFunction, Request, Response } from 'express';
+import type { HttpError } from '#shared/errors/http.error.js';
+import { InternalServerError } from '#shared/errors/index.js';
+import { isHttpError } from '#shared/errors/type-guards.js';
 
 export const errorHandlerMiddleware = (
   error: Error,
