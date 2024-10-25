@@ -1,4 +1,3 @@
-import type { MongoError } from 'mongodb';
 import {
   type Exercise,
   type ExerciseDocument,
@@ -43,7 +42,7 @@ async function createExercise(
   userId: string,
   exerciseData: Partial<Omit<Exercise, 'userId'>>
 ): Promise<ExerciseDto | never> {
-  const [error, newExercise] = await to<ExerciseDocument, MongoError>(
+  const [error, newExercise] = await to<ExerciseDocument>(
     ExerciseModel.create({ ...exerciseData, userId })
   );
 
@@ -79,7 +78,7 @@ async function deleteExercise(
   userId: string,
   exerciseId: string
 ): Promise<void> {
-  const [error, deletedExercise] = await to(
+  const [error, deletedExercise] = await to<ExerciseDocument | null>(
     ExerciseModel.findOneAndDelete({
       _id: exerciseId,
       userId

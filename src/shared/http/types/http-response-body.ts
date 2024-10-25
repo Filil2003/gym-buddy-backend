@@ -1,4 +1,4 @@
-import type { HttpError } from '@shared/errors/http.error.js';
+import type { HttpError } from '#shared/errors/http.error.js';
 import type { DebugInfo } from './debug-info.js';
 
 interface SuccessHttpResponseBody<T> {

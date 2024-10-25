@@ -3,11 +3,15 @@ import { config } from '#config/index.js';
 import {
   errorHandlerMiddleware,
   httpResponseLoggerMiddleware,
-  pageNotFoundMiddleware, requestIdMiddleware,
+  pageNotFoundMiddleware,
+  requestIdMiddleware,
   responseModifierMiddleware
 } from '#middlewares/index.js';
-import { exerciseRouter } from '#routers/exercise.router.js';
-import { userRouter } from '#routers/user.router.js';
+import {
+  exerciseRouter,
+  userRouter,
+  workoutPlanRouter
+} from '#routers/index.js';
 import { cliLoggerService } from '#services/logger/index.js';
 import { mongooseConnect } from './database/mongoose-connect.js';
 
@@ -30,6 +34,7 @@ app.get('/', (_req: Request, res: Response): void => {
 
 app.use('/api', userRouter);
 app.use('/api', exerciseRouter);
+app.use('/api', workoutPlanRouter);
 
 app.all('*', pageNotFoundMiddleware);
 
