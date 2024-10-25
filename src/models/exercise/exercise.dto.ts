@@ -27,7 +27,7 @@ export class ExerciseDto {
     this.note = note;
     this.userId = userId;
 
-    Object.freeze(this); // Prevents mutation of the UserDto instance
+    Object.freeze(this); // Prevents mutation of the ExerciseDto instance
   }
 
   /**
