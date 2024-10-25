@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { exerciseController } from '#controllers/exercise.controller.js';
 
-const exerciseRouter = Router();
+const exerciseRouter: Router = Router();
 
 exerciseRouter.get(
   '/users/:userId/exercises',
