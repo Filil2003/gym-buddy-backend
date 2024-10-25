@@ -45,5 +45,5 @@ try {
     cliLoggerService.info(`Server started on ${BASE_URL}:${PORT}`);
   });
 } catch (error: unknown) {
-  console.error(error);
+  if (error instanceof Error) cliLoggerService.error(error.message);
 }
