@@ -1,3 +1,4 @@
+import { workoutSessionRouter } from '#routers/workout-session.router.js';
 import express, { type Express, type Request, type Response } from 'express';
 import { config } from '#config/index.js';
 import {
@@ -35,6 +36,7 @@ app.get('/', (_req: Request, res: Response): void => {
 app.use('/api', userRouter);
 app.use('/api', exerciseRouter);
 app.use('/api', workoutPlanRouter);
+app.use('/api', workoutSessionRouter);
 
 app.all('*', pageNotFoundMiddleware);
 
