@@ -4,3 +4,13 @@ node_modules/
 # IDE
 .idea/
 .vscode/
+
+# Build
+build/
+dist/
+
+# Environment
+.env.local
+
+# Logs
+logs/
