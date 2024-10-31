@@ -18,6 +18,10 @@ export const developmentConfig: EnvironmentConfig = {
     level: LogLevelEnum.Http,
     timestampFormat: 'YYYY-MM-DD HH:mm:ss'
   },
+  jwt: {
+    secretKey: 'secret',
+    expiresIn: '1d'
+  },
   mongo: {
     ...mongoConfig,
     uri: constructMongoUri(mongoConfig)
