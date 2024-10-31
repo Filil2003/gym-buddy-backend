@@ -1,6 +1,6 @@
 export enum LogLevelEnum {
-  ERROR = 'error',
-  WARN = 'warn',
-  INFO = 'info',
-  HTTP = 'http'
+  Error = 'error',
+  Warn = 'warn',
+  Info = 'info',
+  Http = 'http'
 }

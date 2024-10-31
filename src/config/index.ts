@@ -6,7 +6,7 @@ const NODE_ENV = env['NODE_ENV'];
 let config: EnvironmentConfig;
 
 switch (NODE_ENV) {
-  case EnvironmentEnum.DEVELOPMENT: {
+  case EnvironmentEnum.Development: {
     const module = await import('./environments/development.config.js');
     config = module.developmentConfig;
     break;

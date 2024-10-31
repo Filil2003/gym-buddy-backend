@@ -15,7 +15,7 @@ export const developmentConfig: EnvironmentConfig = {
     port: 8080
   },
   logger: {
-    level: LogLevelEnum.HTTP,
+    level: LogLevelEnum.Http,
     timestampFormat: 'YYYY-MM-DD HH:mm:ss'
   },
   mongo: {
