@@ -17,7 +17,7 @@ export class UserDto {
   /**
    * Creates a {@link UserDto} instance from a {@link UserDocument}.
    */
-  static fromModel(user: UserDocument): UserDto {
+  static fromDocument(user: UserDocument): UserDto {
     return new UserDto(user);
   }
 }

@@ -1,29 +1,35 @@
 import type { ObjectId } from 'mongoose';
-import { ExerciseDto } from '#models/exercise/index.js';
-import type { PopulatedWorkoutPlanDocument } from './workout-plan.model.js';
+import {
+  ExerciseDto,
+  isExerciseDocument
+} from '#models/exercise/index.js';
+import type { WorkoutPlanDocument } from './workout-plan.model.js';
 
 /**
  * Data Transfer Object (DTO) for WorkoutPlan.
  */
 export class WorkoutPlanDto {
   public readonly id: string;
-  public readonly userId: ObjectId;
+  public readonly userId: string;
   public readonly name: string;
-  public readonly exercises: ExerciseDto[];
+  public readonly exercises: (ObjectId | ExerciseDto)[];
 
-  constructor({ id, userId, name, exercises }: PopulatedWorkoutPlanDocument) {
+  constructor({ id, userId, name, exercises }: WorkoutPlanDocument) {
     this.id = id;
-    this.userId = userId;
+    this.userId = userId.toString();
     this.name = name;
-    this.exercises = exercises.map(ExerciseDto.fromModel);
+
+    this.exercises = exercises.map((exercise) =>
+      isExerciseDocument(exercise) ? ExerciseDto.fromDocument(exercise) : exercise
+    );
 
     Object.freeze(this); // Prevents mutation of the WorkoutPlanDto instance
   }
 
   /**
-   * Creates a {@link WorkoutPlanDto} instance from a {@link PopulatedWorkoutPlanDocument}.
+   * Creates a {@link WorkoutPlanDto} instance from a {@link WorkoutPlanDocument}.
    */
-  static fromModel(workoutPlan: PopulatedWorkoutPlanDocument): WorkoutPlanDto {
+  static fromDocument(workoutPlan: WorkoutPlanDocument): WorkoutPlanDto {
     return new WorkoutPlanDto(workoutPlan);
   }
 }

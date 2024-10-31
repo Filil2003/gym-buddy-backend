@@ -3,29 +3,14 @@ import { exerciseController } from '#controllers/exercise.controller.js';
 
 const exerciseRouter: Router = Router();
 
-exerciseRouter.get(
-  '/users/:userId/exercises',
-  exerciseController.getAllExercisesByUser
-);
+exerciseRouter.get('/exercises', exerciseController.getAllExercisesByUserId);
 
-exerciseRouter.get(
-  '/users/:userId/exercises/:id',
-  exerciseController.getExerciseById
-);
+exerciseRouter.get('/exercises/:id', exerciseController.getExerciseById);
 
-exerciseRouter.post(
-  '/users/:userId/exercises',
-  exerciseController.createExercise
-);
+exerciseRouter.post('/exercises', exerciseController.createExercise);
 
-exerciseRouter.put(
-  '/users/:userId/exercises/:id',
-  exerciseController.updateExercise
-);
+exerciseRouter.put('/exercises/:id', exerciseController.updateExercise);
 
-exerciseRouter.delete(
-  '/user/:userId/exercises/:id',
-  exerciseController.deleteExercise
-);
+exerciseRouter.delete('/exercises/:id', exerciseController.deleteExercise);
 
 export { exerciseRouter };

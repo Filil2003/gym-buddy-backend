@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { workoutSessionController } from '#controllers/workout-session.controller.js';
 
-export const workoutSessionRouter: Router = Router();
+const workoutSessionRouter: Router = Router({mergeParams: true});
 
 workoutSessionRouter.get(
-  '/:workoutPlanId/sessions',
-  workoutSessionController.getAllWorkoutSessionsByWorkoutPlan
+  '/sessions',
+  workoutSessionController.getAllWorkoutSessionsByWorkoutPlanId
 );
 
 workoutSessionRouter.get(
@@ -14,7 +14,7 @@ workoutSessionRouter.get(
 );
 
 workoutSessionRouter.post(
-  '/:workoutPlanId/sessions',
+  '/sessions',
   workoutSessionController.createWorkoutSession
 );
 
@@ -27,3 +27,5 @@ workoutSessionRouter.delete(
   '/sessions/:workoutSessionId',
   workoutSessionController.deleteWorkoutSession
 );
+
+export { workoutSessionRouter };

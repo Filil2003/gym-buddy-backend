@@ -34,9 +34,7 @@ const userSchema = new Schema<User, UserModel, UserMethods>(
       required: true
     }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 userSchema.method(
@@ -61,4 +59,4 @@ userSchema.pre(
   }
 );
 
-export const UserModel = model<User, UserModel>('User', userSchema);
+export const UserModel: UserModel = model<User, UserModel>('User', userSchema);

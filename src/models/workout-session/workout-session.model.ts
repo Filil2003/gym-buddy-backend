@@ -5,77 +5,53 @@ import {
   Schema,
   model
 } from 'mongoose';
+import type { ExerciseDocument } from '#models/exercise/index.js';
 
-interface WorkoutSessionExercise {
-  exerciseId: ObjectId;
-  sets: [
-    {
-      reps: number;
-      weight: number;
-    }
-  ];
+interface WorkoutSet {
+  reps: number;
+  weight: number;
+}
+
+interface WorkoutExercise {
+  exercise: ObjectId | ExerciseDocument;
+  sets: WorkoutSet[];
 }
 
 export interface WorkoutSession {
+  userId: ObjectId;
   workoutPlanId: ObjectId;
   startedAt: Date;
   finishedAt: Date;
-  exercises: WorkoutSessionExercise[];
+  exercises: WorkoutExercise[];
 }
 
 type WorkoutSessionModel = Model<WorkoutSession>;
 
 export type WorkoutSessionDocument = HydratedDocument<WorkoutSession>;
 
-// export type PopulatedWorkoutSessionDocument = HydratedDocument<
-//   MergeType<WorkoutSession, { exercises: WorkoutPlanDocument }>
-// >;
+const workoutSetSchema = new Schema<WorkoutSet>({
+  reps: { type: Number, required: true, min: 0 },
+  weight: { type: Number, required: true, min: 0 }
+});
 
-const workoutSessionExerciseSchema = new Schema<WorkoutSessionExercise>(
-  {
-    exerciseId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Exercise',
-      required: true
-    },
-    sets: [
-      {
-        reps: {
-          type: Number,
-          required: true
-        },
-        weight: {
-          type: Number,
-          required: true
-        }
-      }
-    ]
-  },
-  {
-    _id: false
-  }
-);
+const workoutExerciseSchema = new Schema<WorkoutExercise>({
+  exercise: { type: Schema.Types.ObjectId, ref: 'Exercise', required: true },
+  sets: [workoutSetSchema]
+});
 
 const workoutSessionSchema = new Schema<WorkoutSession, WorkoutSessionModel>(
   {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     workoutPlanId: {
       type: Schema.Types.ObjectId,
       ref: 'WorkoutPlan',
       required: true
     },
-    startedAt: {
-      type: Date,
-      required: true
-    },
-    finishedAt: {
-      type: Date,
-      required: true
-    },
-    exercises: [workoutSessionExerciseSchema]
+    startedAt: { type: Date, required: true },
+    finishedAt: { type: Date, required: true },
+    exercises: [workoutExerciseSchema]
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 export const WorkoutSessionModel: WorkoutSessionModel = model<

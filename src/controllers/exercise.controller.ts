@@ -1,34 +1,32 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { Exercise } from '#models/exercise/index.js';
+import { type ExerciseDocument, ExerciseDto } from '#models/exercise/index.js';
 import { exerciseService } from '#services/exercise/exercise.service.js';
 import { BadRequestError } from '#shared/errors/index.js';
 import { HttpStatusCode } from '#shared/http/enums/index.js';
 import { to } from '#shared/utils/to.js';
 
 export const exerciseController = {
-  getAllExercisesByUser,
+  getAllExercisesByUserId,
   getExerciseById,
   createExercise,
   updateExercise,
   deleteExercise
 };
 
-async function getAllExercisesByUser(
-  req: Request,
+async function getAllExercisesByUserId(
+  _req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId } = req.params;
+  const { userId } = res.locals;
 
-  if (!userId) return next(new BadRequestError());
-
-  const [error, exercises] = await to(
-    exerciseService.getAllExercisesByUser(userId)
+  const [error, exercises] = await to<ExerciseDocument[]>(() =>
+    exerciseService.getAllExercisesByUserId(userId)
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(exercises);
+  res.status(HttpStatusCode.Ok).json(exercises.map(ExerciseDto.fromDocument));
 }
 
 async function getExerciseById(
@@ -36,17 +34,18 @@ async function getExerciseById(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId, id } = req.params;
+  const { userId } = res.locals;
+  const { id: exerciseId } = req.params;
 
-  if (!(userId && id)) return next(new BadRequestError());
+  if (!exerciseId) return next(new BadRequestError());
 
-  const [error, exercise] = await to(
-    exerciseService.getExerciseById(userId, id)
+  const [error, exercise] = await to<ExerciseDocument>(() =>
+    exerciseService.getExerciseById(userId, exerciseId)
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(exercise);
+  res.status(HttpStatusCode.Ok).json(ExerciseDto.fromDocument(exercise));
 }
 
 async function createExercise(
@@ -54,18 +53,16 @@ async function createExercise(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId } = req.params;
-  const exerciseData: Partial<Omit<Exercise, 'userId'>> = req.body;
+  const { userId } = res.locals;
+  const exerciseData = req.body;
 
-  if (!userId) return next(new BadRequestError());
-
-  const [error, exercise] = await to(
+  const [error, exercise] = await to<ExerciseDocument>(() =>
     exerciseService.createExercise(userId, exerciseData)
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Created).json(exercise);
+  res.status(HttpStatusCode.Created).json(ExerciseDto.fromDocument(exercise));
 }
 
 async function updateExercise(
@@ -73,18 +70,19 @@ async function updateExercise(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId, id } = req.params;
-  const updatedFields: Partial<Omit<Exercise, 'userId'>> = req.body;
+  const { userId } = res.locals;
+  const { id: exerciseId } = req.params;
+  const updatedFields = req.body;
 
-  if (!(userId && id)) return next(new BadRequestError());
+  if (!exerciseId) return next(new BadRequestError());
 
-  const [error, updatedExercise] = await to(
-    exerciseService.updateExercise(userId, id, updatedFields)
+  const [error, updatedExercise] = await to<ExerciseDocument>(() =>
+    exerciseService.updateExercise(userId, exerciseId, updatedFields)
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(updatedExercise);
+  res.status(HttpStatusCode.Ok).json(ExerciseDto.fromDocument(updatedExercise));
 }
 
 async function deleteExercise(
@@ -92,11 +90,14 @@ async function deleteExercise(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId, id } = req.params;
+  const { userId } = res.locals;
+  const { id: exerciseId } = req.params;
 
-  if (!(userId && id)) return next(new BadRequestError());
+  if (!exerciseId) return next(new BadRequestError());
 
-  const [error] = await to(exerciseService.deleteExercise(userId, id));
+  const [error] = await to(() =>
+    exerciseService.deleteExercise(userId, exerciseId)
+  );
 
   if (error) return next(error);
 

@@ -1,34 +1,37 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { WorkoutPlan } from '#models/workout-plan/index.js';
+import {
+  type WorkoutPlanDocument,
+  WorkoutPlanDto
+} from '#models/workout-plan/index.js';
 import { workoutPlanService } from '#services/workout-plan/workout-plan.service.js';
 import { BadRequestError } from '#shared/errors/index.js';
 import { HttpStatusCode } from '#shared/http/enums/index.js';
 import { to } from '#shared/utils/to.js';
 
 export const workoutPlanController = {
-  getAllWorkoutPlansByUser,
+  getAllWorkoutPlansByUserId,
   getWorkoutPlanById,
   createWorkoutPlan,
   updateWorkoutPlan,
   deleteWorkoutPlan
 };
 
-async function getAllWorkoutPlansByUser(
-  req: Request,
+async function getAllWorkoutPlansByUserId(
+  _req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId } = req.params;
+  const { userId } = res.locals;
 
-  if (!userId) return next(new BadRequestError());
-
-  const [error, workoutPlans] = await to(
-    workoutPlanService.getAllWorkoutPlansByUser(userId)
+  const [error, workoutPlans] = await to<WorkoutPlanDocument[]>(() =>
+    workoutPlanService.getAllWorkoutPlansByUserId(userId, ['exercises'])
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(workoutPlans);
+  res
+    .status(HttpStatusCode.Ok)
+    .json(workoutPlans.map(WorkoutPlanDto.fromDocument));
 }
 
 async function getWorkoutPlanById(
@@ -36,17 +39,18 @@ async function getWorkoutPlanById(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId, id } = req.params;
+  const { userId } = res.locals;
+  const { id: workoutPlanId } = req.params;
 
-  if (!(userId && id)) return next(new BadRequestError());
+  if (!workoutPlanId) return next(new BadRequestError());
 
-  const [error, workoutPlan] = await to(
-    workoutPlanService.getWorkoutPlanById(userId, id)
+  const [error, workoutPlan] = await to<WorkoutPlanDocument>(() =>
+    workoutPlanService.getWorkoutPlanById(userId, workoutPlanId, ['exercises'])
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(workoutPlan);
+  res.status(HttpStatusCode.Ok).json(WorkoutPlanDto.fromDocument(workoutPlan));
 }
 
 async function createWorkoutPlan(
@@ -54,18 +58,18 @@ async function createWorkoutPlan(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId } = req.params;
-  const workoutPlanData: Partial<Omit<WorkoutPlan, 'userId'>> = req.body;
+  const { userId } = res.locals;
+  const workoutPlanData = req.body;
 
-  if (!userId) return next(new BadRequestError());
-
-  const [error, workoutPlan] = await to(
-    workoutPlanService.createWorkoutPlan(userId, workoutPlanData)
+  const [error, workoutPlan] = await to<WorkoutPlanDocument>(() =>
+    workoutPlanService.createWorkoutPlan(userId, workoutPlanData, ['exercises'])
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Created).json(workoutPlan);
+  res
+    .status(HttpStatusCode.Created)
+    .json(WorkoutPlanDto.fromDocument(workoutPlan));
 }
 
 async function updateWorkoutPlan(
@@ -73,18 +77,23 @@ async function updateWorkoutPlan(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId, id } = req.params;
-  const updatedFields: Partial<Omit<WorkoutPlan, 'userId'>> = req.body;
+  const { userId } = res.locals;
+  const { id: workoutPlanId } = req.params;
+  const updatedFields = req.body;
 
-  if (!(userId && id)) return next(new BadRequestError());
+  if (!workoutPlanId) return next(new BadRequestError());
 
-  const [error, updatedWorkoutPlan] = await to(
-    workoutPlanService.updateWorkoutPlan(userId, id, updatedFields)
+  const [error, updatedWorkoutPlan] = await to<WorkoutPlanDocument>(() =>
+    workoutPlanService.updateWorkoutPlan(userId, workoutPlanId, updatedFields, [
+      'exercises'
+    ])
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(updatedWorkoutPlan);
+  res
+    .status(HttpStatusCode.Ok)
+    .json(WorkoutPlanDto.fromDocument(updatedWorkoutPlan));
 }
 
 async function deleteWorkoutPlan(
@@ -92,11 +101,14 @@ async function deleteWorkoutPlan(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { userId, id } = req.params;
+  const { userId } = res.locals;
+  const { id: workoutPlanId } = req.params;
 
-  if (!(userId && id)) return next(new BadRequestError());
+  if (!workoutPlanId) return next(new BadRequestError());
 
-  const [error] = await to(workoutPlanService.deleteWorkoutPlan(userId, id));
+  const [error] = await to(() =>
+    workoutPlanService.deleteWorkoutPlan(userId, workoutPlanId)
+  );
 
   if (error) return next(error);
 

@@ -1,101 +1,89 @@
-import type { ExerciseDocument } from '#models/exercise/index.js';
 import {
-  type PopulatedWorkoutPlanDocument,
   type WorkoutPlan,
   type WorkoutPlanDocument,
-  WorkoutPlanDto,
   WorkoutPlanModel
 } from '#models/workout-plan/index.js';
 import { to } from '#shared/utils/to.js';
 import { WorkoutPlanNotFoundError } from './errors.js';
 
 export const workoutPlanService = {
-  getAllWorkoutPlansByUser,
+  getAllWorkoutPlansByUserId,
   getWorkoutPlanById,
   createWorkoutPlan,
   updateWorkoutPlan,
   deleteWorkoutPlan
 };
 
-async function getAllWorkoutPlansByUser(
-  userId: string
-): Promise<WorkoutPlanDto[]> {
-  const workoutPlans: PopulatedWorkoutPlanDocument[] =
-    await WorkoutPlanModel.find({ userId }).populate<{
-      exercises: ExerciseDocument[];
-    }>('exercises');
-
-  return workoutPlans.map(WorkoutPlanDto.fromModel);
+async function getAllWorkoutPlansByUserId(
+  userId: string,
+  populateFields: string[] = []
+): Promise<WorkoutPlanDocument[]> {
+  return WorkoutPlanModel.find({ userId }).populate(populateFields);
 }
 
 async function getWorkoutPlanById(
   userId: string,
-  workoutPlanId: string
-): Promise<WorkoutPlanDto | never> {
-  const [error, workoutPlan] = await to<PopulatedWorkoutPlanDocument | null>(
+  workoutPlanId: string,
+  populateFields: string[] = []
+): Promise<WorkoutPlanDocument | never> {
+  const [error, workoutPlan] = await to<WorkoutPlanDocument | null>(() =>
     WorkoutPlanModel.findOne({
       _id: workoutPlanId,
       userId
-    }).populate<{ exercises: ExerciseDocument[] }>('exercises')
+    }).populate(populateFields)
   );
 
   if (error) throw error;
 
-  if (!workoutPlan)
-    throw new WorkoutPlanNotFoundError('Workout plan not found');
+  if (!workoutPlan) throw new WorkoutPlanNotFoundError();
 
-  return WorkoutPlanDto.fromModel(workoutPlan);
+  return workoutPlan;
 }
 
 async function createWorkoutPlan(
   userId: string,
-  workoutPlanData: Partial<Omit<WorkoutPlan, 'userId'>>
-): Promise<WorkoutPlanDto | never> {
-  const [error, newWorkoutPlan] = await to<WorkoutPlanDocument>(
+  workoutPlanData: Partial<Omit<WorkoutPlan, 'userId'>>,
+  populateFields: string[] = []
+): Promise<WorkoutPlanDocument | never> {
+  const [error, newWorkoutPlan] = await to<WorkoutPlanDocument>(() =>
     WorkoutPlanModel.create({ ...workoutPlanData, userId })
   );
 
   if (error) throw error;
 
-  await newWorkoutPlan.populate<{ exercises: ExerciseDocument[] }>('exercises');
-
-  return WorkoutPlanDto.fromModel(
-    newWorkoutPlan as PopulatedWorkoutPlanDocument
-  );
+  return newWorkoutPlan.populate(populateFields);
 }
 
 async function updateWorkoutPlan(
   userId: string,
   workoutPlanId: string,
-  updatedFields: Partial<Omit<WorkoutPlan, 'userId'>>
-): Promise<WorkoutPlanDto | never> {
-  const [error, updatedWorkoutPlan] =
-    await to<PopulatedWorkoutPlanDocument | null>(
-      WorkoutPlanModel.findOneAndUpdate(
-        { _id: workoutPlanId, userId },
-        updatedFields,
-        { new: true }
-      ).populate<{ exercises: ExerciseDocument[] }>('exercises')
-    );
+  updatedFields: Partial<Omit<WorkoutPlan, 'userId'>>,
+  populateFields: string[] = []
+): Promise<WorkoutPlanDocument | never> {
+  const [error, updatedWorkoutPlan] = await to<WorkoutPlanDocument | null>(() =>
+    WorkoutPlanModel.findOneAndUpdate(
+      { _id: workoutPlanId, userId },
+      updatedFields,
+      { new: true }
+    ).populate(populateFields)
+  );
 
   if (error) throw error;
 
-  if (!updatedWorkoutPlan)
-    throw new WorkoutPlanNotFoundError('Workout plan not found');
+  if (!updatedWorkoutPlan) throw new WorkoutPlanNotFoundError();
 
-  return WorkoutPlanDto.fromModel(updatedWorkoutPlan);
+  return updatedWorkoutPlan;
 }
 
 async function deleteWorkoutPlan(
   userId: string,
   workoutPlanId: string
 ): Promise<void> {
-  const [error, deletedWorkoutPlan] = await to<WorkoutPlanDocument | null>(
+  const [error, deletedWorkoutPlan] = await to<WorkoutPlanDocument | null>(() =>
     WorkoutPlanModel.findOneAndDelete({ _id: workoutPlanId, userId })
   );
 
   if (error) throw error;
 
-  if (!deletedWorkoutPlan)
-    throw new WorkoutPlanNotFoundError('Workout plan not found');
+  if (!deletedWorkoutPlan) throw new WorkoutPlanNotFoundError();
 }

@@ -19,6 +19,10 @@ export interface EnvironmentConfig {
     level: LogLevelEnum;
     timestampFormat: string;
   };
+  jwt: {
+    secretKey: string;
+    expiresIn: string;
+  }
   mongo: {
     host: string;
     port: number;

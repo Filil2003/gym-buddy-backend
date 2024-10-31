@@ -1,8 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose, { type Mongoose } from 'mongoose';
 import { config } from '#config/index.js';
 import { cliLoggerService } from '#services/logger/index.js';
-import { to } from '#shared/utils/to.js';
-import { MongoDbError } from './errors.js';
 
 if (config.isDebug) {
   mongoose.set('debug', (collectionName, method, query, doc) => {
@@ -12,19 +10,16 @@ if (config.isDebug) {
   });
 }
 
-export async function mongooseConnect(): Promise<void> {
+export async function mongooseConnect(): Promise<Mongoose> {
   cliLoggerService.info('Connecting to MongoDB...');
 
-  const [error, connection] = await to(mongoose.connect(config.mongo.uri));
-
-  if (error) {
-    cliLoggerService.error(error.message);
-    throw new MongoDbError('Failed to connect to MongoDB', error);
-  }
+  const connection = await mongoose.connect(config.mongo.uri);
 
   cliLoggerService.info(
     `MongoDB connected to ${connection.connection.host}:${connection.connection.port}`
   );
   cliLoggerService.info(`MongoDB version: ${connection.version}`);
   cliLoggerService.info(`MongoDB name: ${connection.connection.name}`);
+
+  return connection;
 }

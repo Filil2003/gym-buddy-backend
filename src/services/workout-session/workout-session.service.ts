@@ -1,89 +1,82 @@
-import { WorkoutSessionDto } from '#models/workout-session/workout-session.dto.js';
 import {
   type WorkoutSession,
   type WorkoutSessionDocument,
   WorkoutSessionModel
-} from '#models/workout-session/workout-session.model.js';
+} from '#models/workout-session/index.js';
 import { to } from '#shared/utils/to.js';
 import { WorkoutSessionNotFoundError } from './errors.js';
 
 export const workoutSessionService = {
-  getAllWorkoutSessionsByWorkoutPlan,
+  getAllWorkoutSessionsByWorkoutPlanId,
   getWorkoutSessionById,
   createWorkoutSession,
   updateWorkoutSession,
   deleteWorkoutSession
 };
 
-async function getAllWorkoutSessionsByWorkoutPlan(
-  workoutPlanId: string
-): Promise<WorkoutSessionDto[]> {
-  const workoutSessions: WorkoutSessionDocument[] =
-    await WorkoutSessionModel.find({
-      workoutPlanId
-    });
-
-  return workoutSessions.map(WorkoutSessionDto.fromModel);
+async function getAllWorkoutSessionsByWorkoutPlanId(
+  workoutPlanId: string,
+  populateFields: string[] = []
+): Promise<WorkoutSessionDocument[]> {
+  return WorkoutSessionModel.find({
+    workoutPlanId
+  }).populate(populateFields);
 }
 
 async function getWorkoutSessionById(
-  workoutSessionId: string
-): Promise<WorkoutSessionDto | never> {
-  const [error, workoutSession] = await to<WorkoutSessionDocument | null>(
-    WorkoutSessionModel.findById(workoutSessionId)
+  workoutSessionId: string,
+  populateFields: string[] = []
+): Promise<WorkoutSessionDocument | never> {
+  const [error, workoutSession] = await to<WorkoutSessionDocument | null>(() =>
+    WorkoutSessionModel.findById(workoutSessionId).populate(populateFields)
   );
 
   if (error) throw error;
 
-  if (!workoutSession)
-    throw new WorkoutSessionNotFoundError('Workout session not found');
+  if (!workoutSession) throw new WorkoutSessionNotFoundError();
 
-  return WorkoutSessionDto.fromModel(workoutSession);
+  return workoutSession;
 }
 
 async function createWorkoutSession(
-  workoutPlanId: string,
-  workoutSessionData: Partial<Omit<WorkoutSession, 'workoutPlanId'>>
-): Promise<WorkoutSessionDto | never> {
-  const [error, newWorkoutSession] = await to<WorkoutSessionDocument>(
-    WorkoutSessionModel.create({
-      ...workoutSessionData,
-      workoutPlanId
-    })
+  documentData: WorkoutSession,
+  populateFields: string[] = []
+): Promise<WorkoutSessionDocument | never> {
+  const [error, newWorkoutSession] = await to<WorkoutSessionDocument>(() =>
+    WorkoutSessionModel.create(documentData)
   );
 
   if (error) throw error;
 
-  return WorkoutSessionDto.fromModel(newWorkoutSession);
+  return newWorkoutSession.populate(populateFields);
 }
 
 async function updateWorkoutSession(
   workoutSessionId: string,
-  updatedFields: Partial<Omit<WorkoutSession, 'workoutPlanId'>>
-): Promise<WorkoutSessionDto | never> {
+  updatedFields: Partial<Omit<WorkoutSession, 'workoutPlanId'>>,
+  populateFields: string[] = []
+): Promise<WorkoutSessionDocument | never> {
   const [error, updatedWorkoutSession] =
-    await to<WorkoutSessionDocument | null>(
+    await to<WorkoutSessionDocument | null>(() =>
       WorkoutSessionModel.findByIdAndUpdate(workoutSessionId, updatedFields, {
         new: true
-      })
+      }).populate(populateFields)
     );
 
   if (error) throw error;
 
-  if (!updatedWorkoutSession)
-    throw new WorkoutSessionNotFoundError('Workout session not found');
+  if (!updatedWorkoutSession) throw new WorkoutSessionNotFoundError();
 
-  return WorkoutSessionDto.fromModel(updatedWorkoutSession);
+  return updatedWorkoutSession;
 }
 
 async function deleteWorkoutSession(workoutSessionId: string): Promise<void> {
   const [error, deletedWorkoutSession] =
-    await to<WorkoutSessionDocument | null>(
+    await to<WorkoutSessionDocument | null>(() =>
       WorkoutSessionModel.findByIdAndDelete(workoutSessionId)
     );
 
   if (error) throw error;
 
-  if (!deletedWorkoutSession)
-    throw new WorkoutSessionNotFoundError('Workout session not found');
+  if (!deletedWorkoutSession) throw new WorkoutSessionNotFoundError();
 }

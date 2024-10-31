@@ -1,30 +1,30 @@
 import {
   type Exercise,
   type ExerciseDocument,
-  ExerciseDto,
   ExerciseModel
 } from '#models/exercise/index.js';
 import { ExerciseNotFoundError } from '#services/exercise/errors.js';
 import { to } from '#shared/utils/to.js';
 
 export const exerciseService = {
-  getAllExercisesByUser,
+  getAllExercisesByUserId,
   getExerciseById,
   createExercise,
   updateExercise,
   deleteExercise
 };
 
-async function getAllExercisesByUser(userId: string): Promise<ExerciseDto[]> {
-  const exercises: ExerciseDocument[] = await ExerciseModel.find({ userId });
-  return exercises.map(ExerciseDto.fromModel);
+async function getAllExercisesByUserId(
+  userId: string
+): Promise<ExerciseDocument[]> {
+  return ExerciseModel.find({ userId });
 }
 
 async function getExerciseById(
   userId: string,
   exerciseId: string
-): Promise<ExerciseDto | never> {
-  const [error, exercise] = await to<ExerciseDocument | null>(
+): Promise<ExerciseDocument | never> {
+  const [error, exercise] = await to<ExerciseDocument | null>(() =>
     ExerciseModel.findOne({
       _id: exerciseId,
       userId
@@ -33,30 +33,30 @@ async function getExerciseById(
 
   if (error) throw error;
 
-  if (!exercise) throw new ExerciseNotFoundError('Exercise not found');
+  if (!exercise) throw new ExerciseNotFoundError();
 
-  return ExerciseDto.fromModel(exercise);
+  return exercise;
 }
 
 async function createExercise(
   userId: string,
   exerciseData: Partial<Omit<Exercise, 'userId'>>
-): Promise<ExerciseDto | never> {
-  const [error, newExercise] = await to<ExerciseDocument>(
+): Promise<ExerciseDocument | never> {
+  const [error, newExercise] = await to<ExerciseDocument>(() =>
     ExerciseModel.create({ ...exerciseData, userId })
   );
 
   if (error) throw error;
 
-  return ExerciseDto.fromModel(newExercise);
+  return newExercise;
 }
 
 async function updateExercise(
   userId: string,
   exerciseId: string,
   updatedFields: Partial<Omit<Exercise, 'userId'>>
-): Promise<ExerciseDto | never> {
-  const [error, updatedExercise] = await to<ExerciseDocument | null>(
+): Promise<ExerciseDocument | never> {
+  const [error, updatedExercise] = await to<ExerciseDocument | null>(() =>
     ExerciseModel.findOneAndUpdate(
       {
         _id: exerciseId,
@@ -69,16 +69,16 @@ async function updateExercise(
 
   if (error) throw error;
 
-  if (!updatedExercise) throw new ExerciseNotFoundError('Exercise not found');
+  if (!updatedExercise) throw new ExerciseNotFoundError();
 
-  return ExerciseDto.fromModel(updatedExercise);
+  return updatedExercise;
 }
 
 async function deleteExercise(
   userId: string,
   exerciseId: string
 ): Promise<void> {
-  const [error, deletedExercise] = await to<ExerciseDocument | null>(
+  const [error, deletedExercise] = await to<ExerciseDocument | null>(() =>
     ExerciseModel.findOneAndDelete({
       _id: exerciseId,
       userId
@@ -87,5 +87,5 @@ async function deleteExercise(
 
   if (error) throw error;
 
-  if (!deletedExercise) throw new ExerciseNotFoundError('Exercise not found');
+  if (!deletedExercise) throw new ExerciseNotFoundError();
 }

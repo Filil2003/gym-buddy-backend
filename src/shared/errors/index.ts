@@ -27,3 +27,9 @@ export class BadRequestError extends HttpError {
     super(message, HttpStatusCode.BadRequest, cause);
   }
 }
+
+export class UnauthorizedError extends HttpError {
+  constructor(message: string = HttpStatusMessage.Unauthorized, cause?: Error) {
+    super(message, HttpStatusCode.Unauthorized, cause);
+  }
+}

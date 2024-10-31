@@ -1,34 +1,41 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { WorkoutSession } from '#models/workout-session/workout-session.model.js';
+import {
+  type WorkoutSessionDocument,
+  WorkoutSessionDto
+} from '#models/workout-session/index.js';
 import { workoutSessionService } from '#services/workout-session/workout-session.service.js';
 import { BadRequestError } from '#shared/errors/index.js';
 import { HttpStatusCode } from '#shared/http/enums/index.js';
 import { to } from '#shared/utils/to.js';
 
 export const workoutSessionController = {
-  getAllWorkoutSessionsByWorkoutPlan,
+  getAllWorkoutSessionsByWorkoutPlanId,
   getWorkoutSessionById,
   createWorkoutSession,
   updateWorkoutSession,
   deleteWorkoutSession
 };
 
-async function getAllWorkoutSessionsByWorkoutPlan(
+async function getAllWorkoutSessionsByWorkoutPlanId(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { workoutPlanId } = req.params;
+  const { id: workoutPlanId } = req.params;
 
   if (!workoutPlanId) return next(new BadRequestError());
 
-  const [error, workoutSessions] = await to(
-    workoutSessionService.getAllWorkoutSessionsByWorkoutPlan(workoutPlanId)
+  const [error, workoutSessions] = await to<WorkoutSessionDocument[]>(() =>
+    workoutSessionService.getAllWorkoutSessionsByWorkoutPlanId(workoutPlanId, [
+      'exercises.exercise'
+    ])
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(workoutSessions);
+  res
+    .status(HttpStatusCode.Ok)
+    .json(workoutSessions.map(WorkoutSessionDto.fromDocument));
 }
 
 async function getWorkoutSessionById(
@@ -40,13 +47,17 @@ async function getWorkoutSessionById(
 
   if (!workoutSessionId) return next(new BadRequestError());
 
-  const [error, workoutSession] = await to(
-    workoutSessionService.getWorkoutSessionById(workoutSessionId)
+  const [error, workoutSession] = await to<WorkoutSessionDocument>(() =>
+    workoutSessionService.getWorkoutSessionById(workoutSessionId, [
+      'exercises.exercise'
+    ])
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(workoutSession);
+  res
+    .status(HttpStatusCode.Ok)
+    .json(WorkoutSessionDto.fromDocument(workoutSession));
 }
 
 async function createWorkoutSession(
@@ -54,22 +65,28 @@ async function createWorkoutSession(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { workoutPlanId } = req.params;
-  const workoutSessionData: Partial<Omit<WorkoutSession, 'workoutPlanId'>> =
-    req.body;
-
+  const { id: workoutPlanId } = req.params;
   if (!workoutPlanId) return next(new BadRequestError());
 
-  const [error, workoutSession] = await to(
+  const { userId } = res.locals;
+  const workoutSessionData = req.body;
+
+  const [error, workoutSession] = await to<WorkoutSessionDocument>(() =>
     workoutSessionService.createWorkoutSession(
-      workoutPlanId,
-      workoutSessionData
+      {
+        ...workoutSessionData,
+        workoutPlanId,
+        userId
+      },
+      ['exercises.exercise']
     )
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Created).json(workoutSession);
+  res
+    .status(HttpStatusCode.Created)
+    .json(WorkoutSessionDto.fromDocument(workoutSession));
 }
 
 async function updateWorkoutSession(
@@ -78,17 +95,23 @@ async function updateWorkoutSession(
   next: NextFunction
 ): Promise<void> {
   const { workoutSessionId } = req.params;
-  const updatedFields: Partial<Omit<WorkoutSession, 'workoutPlanId'>> = req.body;
+  const updatedFields = req.body;
 
   if (!workoutSessionId) return next(new BadRequestError());
 
-  const [error, updatedWorkoutSession] = await to(
-    workoutSessionService.updateWorkoutSession(workoutSessionId, updatedFields)
+  const [error, updatedWorkoutSession] = await to<WorkoutSessionDocument>(() =>
+    workoutSessionService.updateWorkoutSession(
+      workoutSessionId,
+      updatedFields,
+      ['exercises.exercise']
+    )
   );
 
   if (error) return next(error);
 
-  res.status(HttpStatusCode.Ok).json(updatedWorkoutSession);
+  res
+    .status(HttpStatusCode.Ok)
+    .json(WorkoutSessionDto.fromDocument(updatedWorkoutSession));
 }
 
 async function deleteWorkoutSession(
@@ -100,7 +123,7 @@ async function deleteWorkoutSession(
 
   if (!workoutSessionId) return next(new BadRequestError());
 
-  const [error] = await to(
+  const [error] = await to(() =>
     workoutSessionService.deleteWorkoutSession(workoutSessionId)
   );
 
