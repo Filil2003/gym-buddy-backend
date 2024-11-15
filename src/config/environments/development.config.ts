@@ -14,6 +14,9 @@ export const developmentConfig: EnvironmentConfig = {
     baseUrl: 'http://dev.localhost',
     port: 8080
   },
+  cors: {
+    allowedOrigins: ['http://localhost:5173']
+  },
   logger: {
     level: LogLevelEnum.Http,
     timestampFormat: 'YYYY-MM-DD HH:mm:ss'
