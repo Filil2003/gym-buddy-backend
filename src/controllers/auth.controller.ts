@@ -42,7 +42,10 @@ async function register(
     return next(error);
   }
 
-  const authToken: string = jwtService.signToken({ userId: newUser.id });
+  const authToken: string = jwtService.signToken({
+    id: newUser.id,
+    email: newUser.email
+  });
 
   res.status(HttpStatusCode.Created).json({ authToken });
 }
@@ -67,7 +70,10 @@ async function signIn(
   if (!isPasswordValid)
     return next(new UnauthorizedError('Invalid credentials'));
 
-  const authToken: string = jwtService.signToken({ userId: user.id });
+  const authToken: string = jwtService.signToken({
+    id: user.id,
+    email: user.email
+  });
 
   res.status(HttpStatusCode.Ok).json({ authToken });
 }

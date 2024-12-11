@@ -14,12 +14,12 @@ export const authenticateUserMiddleware = async (
   if (!authToken) return next(new UnauthorizedError());
 
   const [error, tokenPayload] = await to(() =>
-    jwtService.verifyToken<{ userId: string }>(authToken)
+    jwtService.verifyToken<{ id: string; email: string }>(authToken)
   );
 
   if (error) return next(error);
 
-  res.locals['userId'] = tokenPayload.userId;
+  res.locals['userId'] = tokenPayload.id;
 
   next();
 };

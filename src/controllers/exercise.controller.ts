@@ -1,3 +1,4 @@
+import { saveImage } from '#shared/utils/saveImage.js';
 import type { NextFunction, Request, Response } from 'express';
 import { type ExerciseDocument, ExerciseDto } from '#models/exercise/index.js';
 import { exerciseService } from '#services/exercise/exercise.service.js';
@@ -56,6 +57,14 @@ async function createExercise(
   const { userId } = res.locals;
   const exerciseData = req.body;
 
+  const file = req.body.image?.fileList[0];
+  if (file) {
+    const [saveImageError, fileName] = await saveImage(`${userId}-${exerciseData.name}`, file);
+    if (saveImageError) return next(saveImageError);
+
+    exerciseData.imageFileName = fileName;
+  }
+
   const [error, exercise] = await to<ExerciseDocument>(() =>
     exerciseService.createExercise(userId, exerciseData)
   );
@@ -73,6 +82,14 @@ async function updateExercise(
   const { userId } = res.locals;
   const { id: exerciseId } = req.params;
   const updatedFields = req.body;
+
+  const file = req.body.image?.fileList[0];
+  if (file) {
+    const [saveImageError, fileName] = await saveImage(`${userId}-${updatedFields.name}`, file);
+    if (saveImageError) return next(saveImageError);
+
+    updatedFields.imageFileName = fileName;
+  }
 
   if (!exerciseId) return next(new BadRequestError());
 

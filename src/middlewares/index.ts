@@ -10,7 +10,7 @@ import { responseModifierMiddleware } from './response-modifier.middleware.js';
 export function configureMiddlewares(app: Express) {
   app.disable('x-powered-by');
   app.use(corsHandlerMiddleware);
-  app.use(express.json());
+  app.use(express.json({limit: '10mb'}));
   app.use(requestIdMiddleware);
   app.use(responseModifierMiddleware);
   app.use(httpResponseLoggerMiddleware);
