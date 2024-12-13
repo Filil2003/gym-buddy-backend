@@ -10,11 +10,15 @@ import { responseModifierMiddleware } from './response-modifier.middleware.js';
 export function configureMiddlewares(app: Express) {
   app.disable('x-powered-by');
   app.use(corsHandlerMiddleware);
-  app.use(express.json({limit: '10mb'}));
+  app.use(express.json({ limit: '10mb' }));
   app.use(requestIdMiddleware);
   app.use(responseModifierMiddleware);
   app.use(httpResponseLoggerMiddleware);
-  app.use('/api', authenticateUserMiddleware);
+  app.use('/api', (req, res, next) => {
+    if (req.path.startsWith('/auth') || req.path.startsWith('/uploads'))
+      return next();
+    return authenticateUserMiddleware(req, res, next);
+  });
 }
 
 export function configureErrorHandlers(app: Express) {
