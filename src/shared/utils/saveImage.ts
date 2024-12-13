@@ -22,6 +22,8 @@ export async function saveImage(
   const filePath: string = path.join(process.cwd(), 'uploads', fileName);
 
   const buffer: Buffer = Buffer.from(base64Data, 'base64');
+
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
   const [error] = await to(() => fs.writeFile(filePath, buffer));
 
   if (error) return [error, undefined] as const;
