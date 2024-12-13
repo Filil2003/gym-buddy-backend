@@ -63,7 +63,6 @@ async function createWorkoutSession(
 ): Promise<void> {
   const { userId } = res.locals;
   const workoutSessionData = req.body;
-  console.log(workoutSessionData);
 
   const [error, workoutSession] = await to<WorkoutSessionDocument>(() =>
     workoutSessionService.createWorkoutSession(
