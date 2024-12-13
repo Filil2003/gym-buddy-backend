@@ -24,7 +24,7 @@ export const productionConfig: EnvironmentConfig = {
   },
   jwt: {
     secretKey: env['JWT_SECRET_KEY'] as string,
-    expiresIn: '30d'
+    expiresIn: env['JWT_EXPIRES_IN'] as string
   },
   mongo: {
     ...mongoConfig,
