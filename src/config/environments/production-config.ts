@@ -6,6 +6,9 @@ import { constructMongoUri } from '../utils/construct-mongo-uri.js';
 const mongoConfig = {
   host: env['MONGO_HOST'] as string,
   port: Number(env['MONGO_PORT']),
+  username: env['MONGO_USERNAME'],
+  password: env['MONGO_PASSWORD'],
+  options: env['MONGO_OPTIONS'],
   database: env['MONGO_DB'] as string
 };
 
