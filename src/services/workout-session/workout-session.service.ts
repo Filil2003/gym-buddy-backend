@@ -7,28 +7,26 @@ import { to } from '#shared/utils/to.js';
 import { WorkoutSessionNotFoundError } from './errors.js';
 
 export const workoutSessionService = {
-  getAllWorkoutSessionsByWorkoutPlanId,
+  getAllWorkoutSessionsByUserId,
   getWorkoutSessionById,
   createWorkoutSession,
   updateWorkoutSession,
   deleteWorkoutSession
 };
 
-async function getAllWorkoutSessionsByWorkoutPlanId(
-  workoutPlanId: string,
-  populateFields: string[] = []
+async function getAllWorkoutSessionsByUserId(
+  userId: string
 ): Promise<WorkoutSessionDocument[]> {
   return WorkoutSessionModel.find({
-    workoutPlanId
-  }).populate(populateFields);
+    userId
+  }).sort({ startedAt: -1 });
 }
 
 async function getWorkoutSessionById(
-  workoutSessionId: string,
-  populateFields: string[] = []
+  workoutSessionId: string
 ): Promise<WorkoutSessionDocument | never> {
   const [error, workoutSession] = await to<WorkoutSessionDocument | null>(() =>
-    WorkoutSessionModel.findById(workoutSessionId).populate(populateFields)
+    WorkoutSessionModel.findById(workoutSessionId)
   );
 
   if (error) throw error;
@@ -39,8 +37,7 @@ async function getWorkoutSessionById(
 }
 
 async function createWorkoutSession(
-  documentData: WorkoutSession,
-  populateFields: string[] = []
+  documentData: WorkoutSession
 ): Promise<WorkoutSessionDocument | never> {
   const [error, newWorkoutSession] = await to<WorkoutSessionDocument>(() =>
     WorkoutSessionModel.create(documentData)
@@ -48,19 +45,18 @@ async function createWorkoutSession(
 
   if (error) throw error;
 
-  return newWorkoutSession.populate(populateFields);
+  return newWorkoutSession;
 }
 
 async function updateWorkoutSession(
   workoutSessionId: string,
-  updatedFields: Partial<Omit<WorkoutSession, 'workoutPlanId'>>,
-  populateFields: string[] = []
+  updatedFields: Partial<Omit<WorkoutSession, 'workoutPlanId'>>
 ): Promise<WorkoutSessionDocument | never> {
   const [error, updatedWorkoutSession] =
     await to<WorkoutSessionDocument | null>(() =>
       WorkoutSessionModel.findByIdAndUpdate(workoutSessionId, updatedFields, {
         new: true
-      }).populate(populateFields)
+      })
     );
 
   if (error) throw error;

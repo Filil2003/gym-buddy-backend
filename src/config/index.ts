@@ -11,6 +11,11 @@ switch (NODE_ENV) {
     config = module.developmentConfig;
     break;
   }
+  case EnvironmentEnum.Production: {
+    const module = await import('./environments/production-config.js');
+    config = module.productionConfig;
+    break;
+  }
   default:
     throw new Error(
       `NODE_ENV is '${NODE_ENV}'. Must be one of: ${Object.values(EnvironmentEnum).join(' | ')}.`

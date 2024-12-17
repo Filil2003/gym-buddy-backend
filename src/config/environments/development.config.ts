@@ -14,13 +14,16 @@ export const developmentConfig: EnvironmentConfig = {
     baseUrl: 'http://dev.localhost',
     port: 8080
   },
+  cors: {
+    allowedOrigins: ['http://localhost:5173', 'http://localhost:4173', 'http://192.168.0.26:5173']
+  },
   logger: {
     level: LogLevelEnum.Http,
     timestampFormat: 'YYYY-MM-DD HH:mm:ss'
   },
   jwt: {
     secretKey: 'secret',
-    expiresIn: '1d'
+    expiresIn: '365d'
   },
   mongo: {
     ...mongoConfig,

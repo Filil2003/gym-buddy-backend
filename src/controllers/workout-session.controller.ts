@@ -9,26 +9,24 @@ import { HttpStatusCode } from '#shared/http/enums/index.js';
 import { to } from '#shared/utils/to.js';
 
 export const workoutSessionController = {
-  getAllWorkoutSessionsByWorkoutPlanId,
+  getAllWorkoutSessionsByUserId,
   getWorkoutSessionById,
   createWorkoutSession,
   updateWorkoutSession,
   deleteWorkoutSession
 };
 
-async function getAllWorkoutSessionsByWorkoutPlanId(
-  req: Request,
+async function getAllWorkoutSessionsByUserId(
+  _req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { id: workoutPlanId } = req.params;
+  const { userId } = res.locals;
 
-  if (!workoutPlanId) return next(new BadRequestError());
+  if (!userId) return next(new BadRequestError());
 
   const [error, workoutSessions] = await to<WorkoutSessionDocument[]>(() =>
-    workoutSessionService.getAllWorkoutSessionsByWorkoutPlanId(workoutPlanId, [
-      'exercises.exercise'
-    ])
+    workoutSessionService.getAllWorkoutSessionsByUserId(userId)
   );
 
   if (error) return next(error);
@@ -48,9 +46,7 @@ async function getWorkoutSessionById(
   if (!workoutSessionId) return next(new BadRequestError());
 
   const [error, workoutSession] = await to<WorkoutSessionDocument>(() =>
-    workoutSessionService.getWorkoutSessionById(workoutSessionId, [
-      'exercises.exercise'
-    ])
+    workoutSessionService.getWorkoutSessionById(workoutSessionId)
   );
 
   if (error) return next(error);
@@ -65,9 +61,6 @@ async function createWorkoutSession(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const { id: workoutPlanId } = req.params;
-  if (!workoutPlanId) return next(new BadRequestError());
-
   const { userId } = res.locals;
   const workoutSessionData = req.body;
 
@@ -75,10 +68,8 @@ async function createWorkoutSession(
     workoutSessionService.createWorkoutSession(
       {
         ...workoutSessionData,
-        workoutPlanId,
         userId
-      },
-      ['exercises.exercise']
+      }
     )
   );
 
@@ -102,8 +93,7 @@ async function updateWorkoutSession(
   const [error, updatedWorkoutSession] = await to<WorkoutSessionDocument>(() =>
     workoutSessionService.updateWorkoutSession(
       workoutSessionId,
-      updatedFields,
-      ['exercises.exercise']
+      updatedFields
     )
   );
 

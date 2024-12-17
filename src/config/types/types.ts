@@ -15,6 +15,9 @@ export interface EnvironmentConfig {
     baseUrl: string;
     port: number;
   };
+  cors: {
+    allowedOrigins: string[];
+  };
   logger: {
     level: LogLevelEnum;
     timestampFormat: string;
@@ -22,7 +25,7 @@ export interface EnvironmentConfig {
   jwt: {
     secretKey: string;
     expiresIn: string;
-  }
+  };
   mongo: {
     host: string;
     port: number;

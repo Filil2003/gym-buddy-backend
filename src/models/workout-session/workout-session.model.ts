@@ -5,7 +5,6 @@ import {
   Schema,
   model
 } from 'mongoose';
-import type { ExerciseDocument } from '#models/exercise/index.js';
 
 interface WorkoutSet {
   reps: number;
@@ -13,13 +12,16 @@ interface WorkoutSet {
 }
 
 interface WorkoutExercise {
-  exercise: ObjectId | ExerciseDocument;
+  name: string;
+  description?: string;
+  imageFileName?: string;
+  note?: string;
   sets: WorkoutSet[];
 }
 
 export interface WorkoutSession {
   userId: ObjectId;
-  workoutPlanId: ObjectId;
+  workoutPlanTittle: string;
   startedAt: Date;
   finishedAt: Date;
   exercises: WorkoutExercise[];
@@ -35,18 +37,17 @@ const workoutSetSchema = new Schema<WorkoutSet>({
 });
 
 const workoutExerciseSchema = new Schema<WorkoutExercise>({
-  exercise: { type: Schema.Types.ObjectId, ref: 'Exercise', required: true },
+  name: { type: String, required: true },
+  description: { type: String },
+  imageFileName: { type: String },
+  note: { type: String },
   sets: [workoutSetSchema]
 });
 
 const workoutSessionSchema = new Schema<WorkoutSession, WorkoutSessionModel>(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    workoutPlanId: {
-      type: Schema.Types.ObjectId,
-      ref: 'WorkoutPlan',
-      required: true
-    },
+    workoutPlanTittle: { type: 'string', required: true },
     startedAt: { type: Date, required: true },
     finishedAt: { type: Date, required: true },
     exercises: [workoutExerciseSchema]

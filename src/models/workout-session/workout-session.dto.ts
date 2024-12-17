@@ -1,4 +1,3 @@
-import { ExerciseDto, isExerciseDocument } from '#models/exercise/index.js';
 import type { WorkoutSessionDocument } from './workout-session.model.js';
 
 interface WorkoutSetDto {
@@ -7,11 +6,7 @@ interface WorkoutSetDto {
 }
 
 interface WorkoutExerciseDto {
-  id: string;
-  name?: string;
-  description?: string;
-  imageFileName?: string;
-  note?: string;
+  name: string;
   sets: WorkoutSetDto[];
 }
 
@@ -21,7 +16,7 @@ interface WorkoutExerciseDto {
 export class WorkoutSessionDto {
   public readonly id: string;
   public readonly userId: string;
-  public readonly workoutPlanId: string;
+  public readonly planTittle: string;
   public readonly startedAt: Date;
   public readonly finishedAt: Date;
   public readonly exercises: WorkoutExerciseDto[];
@@ -29,32 +24,23 @@ export class WorkoutSessionDto {
   constructor({
     id,
     userId,
-    workoutPlanId,
+    workoutPlanTittle,
     startedAt,
     finishedAt,
     exercises
   }: WorkoutSessionDocument) {
     this.id = id;
     this.userId = userId.toString();
-    this.workoutPlanId = workoutPlanId.toString();
+    this.planTittle = workoutPlanTittle;
     this.startedAt = startedAt;
     this.finishedAt = finishedAt;
-
-    this.exercises = exercises.map(({ exercise, sets }) =>
-      isExerciseDocument(exercise)
-        ? {
-            ...ExerciseDto.fromDocument(exercise),
-            sets: sets.map(
-              ({ reps, weight }): WorkoutSetDto => ({ reps, weight })
-            )
-          }
-        : {
-            id: exercise.toString(),
-            sets: sets.map(
-              ({ reps, weight }): WorkoutSetDto => ({ reps, weight })
-            )
-          }
-    );
+    this.exercises = exercises.map((exercise) => ({
+      name: exercise.name,
+      sets: exercise.sets.map((set) => ({
+        reps: set.reps,
+        weight: set.weight
+      }))
+    }));
 
     Object.freeze(this); // Prevents mutation of the WorkoutSessionDto instance
   }

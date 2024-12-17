@@ -4,27 +4,27 @@ import { workoutSessionController } from '#controllers/workout-session.controlle
 const workoutSessionRouter: Router = Router({mergeParams: true});
 
 workoutSessionRouter.get(
-  '/sessions',
-  workoutSessionController.getAllWorkoutSessionsByWorkoutPlanId
+  '/workout-sessions',
+  workoutSessionController.getAllWorkoutSessionsByUserId
 );
 
 workoutSessionRouter.get(
-  '/sessions/:workoutSessionId',
+  '/workout-sessions/:workoutSessionId',
   workoutSessionController.getWorkoutSessionById
 );
 
 workoutSessionRouter.post(
-  '/sessions',
+  '/workout-sessions',
   workoutSessionController.createWorkoutSession
 );
 
 workoutSessionRouter.put(
-  '/sessions/:workoutSessionId',
+  '/workout-sessions/:workoutSessionId',
   workoutSessionController.updateWorkoutSession
 );
 
 workoutSessionRouter.delete(
-  '/sessions/:workoutSessionId',
+  '/workout-sessions/:workoutSessionId',
   workoutSessionController.deleteWorkoutSession
 );
 

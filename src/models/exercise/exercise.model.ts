@@ -1,3 +1,5 @@
+import { WorkoutPlanModel } from '#models/workout-plan/index.js';
+import { to } from '#shared/utils/to.js';
 import {
   type HydratedDocument,
   type Model,
@@ -35,6 +37,22 @@ const exerciseSchema = new Schema<Exercise, ExerciseModel>(
 
 // Add a composite index
 exerciseSchema.index({ name: 1, userId: 1 }, { unique: true });
+
+exerciseSchema.pre(
+  'deleteOne',
+  { document: true, query: false },
+  async function (next) {
+    const [error] = await to(() =>
+      WorkoutPlanModel.updateMany(
+        { 'exercises.exerciseId': this._id },
+        { $pull: { exercises: { exerciseId: this._id } } }
+      )
+    );
+
+    if (error) return next(error);
+    next();
+  }
+);
 
 export const ExerciseModel: ExerciseModel = model<Exercise, ExerciseModel>(
   'Exercise',
